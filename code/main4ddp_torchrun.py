@@ -13,7 +13,7 @@ from torch.utils.data.distributed import DistributedSampler  # distributed data 
 
 def prepare():
     parser= argparse.ArgumentParser()
-    parser.add_argument('--gpu', default= '2, 3')
+    parser.add_argument('--gpu', default= '2,3')
     parser.add_argument('--epochs', type= int, default= 10000, help= 'epoch number')
     parser.add_argument('--lr', type= float, default= 1e-4, help= 'learning rate')
     parser.add_argument('--weight_decay', type= float, default= 5e-5, help= 'weight decay')
@@ -33,7 +33,7 @@ def init_ddp(local_rank):
     # after this setup, tensors can be moved to GPU via 'a= a.cuda()' rather than 'a= a.to(local_rank)'
     torch.cuda.set_device(local_rank)
     os.environ['RANK']= str(local_rank)
-    dist.init_process_group(backend= 'nccl')  # init communication mode
+    dist.init_process_group(backend= 'nccl', init_method= 'env://')  # init communication mode
 
 # generate a torch generator, which is used for randomness operations during the sampling process, such
 # as randomly selecting data samples.
